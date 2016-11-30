@@ -8,20 +8,17 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
-import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
-import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -33,9 +30,10 @@ public class MainActivity extends AppCompatActivity {
     private final static int REQUEST_CODE = 34;
     ListView listView;
     ArrayAdapter<Contact> adapter;
-    List<Contact> loadContact =  new ArrayList<>();
+    List<Contact> loadContact = new ArrayList<>();
     boolean doubleBackToExitPressedOnce = false;
     DatabaseHandler db;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,36 +48,42 @@ public class MainActivity extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(getApplicationContext(),AddContactActivity.class);
-                startActivityForResult(intent,REQUEST_CODE);
+                Intent intent = new Intent(getApplicationContext(), AddContactActivity.class);
+                startActivityForResult(intent, REQUEST_CODE);
             }
         });
 
         db = new DatabaseHandler(MainActivity.this);
         loadContact = db.getAllContact();
 
-        adapter = new ArrayAdapter<Contact>(getApplicationContext(),R.layout.item_contact,loadContact){
+        adapter = new ArrayAdapter<Contact>(getApplicationContext(), R.layout.item_contact, loadContact) {
             @NonNull
             @Override
             public View getView(int position, View convertView, ViewGroup parent) {
-               if(convertView == null){
-                   convertView = View.inflate(getApplicationContext(),R.layout.item_contact,null);
-               }
+                if (convertView == null) {
+                    convertView = View.inflate(getApplicationContext(), R.layout.item_contact, null);
+                }
                 Contact c = getItem(position);
                 ((TextView) convertView.findViewById(R.id.tv_name)).setText(c.getName());
 
-                switch (position%6){
-                    case 0:((ImageView)convertView.findViewById(R.id.iv_person)).setColorFilter(ContextCompat.getColor(getApplicationContext(),R.color.blue));
+                switch (position % 6) {
+                    case 0:
+                        ((ImageView) convertView.findViewById(R.id.iv_person)).setColorFilter(ContextCompat.getColor(getApplicationContext(), R.color.blue));
                         break;
-                    case 1:((ImageView)convertView.findViewById(R.id.iv_person)).setColorFilter(ContextCompat.getColor(getApplicationContext(),R.color.green));
+                    case 1:
+                        ((ImageView) convertView.findViewById(R.id.iv_person)).setColorFilter(ContextCompat.getColor(getApplicationContext(), R.color.green));
                         break;
-                    case 2:((ImageView)convertView.findViewById(R.id.iv_person)).setColorFilter(ContextCompat.getColor(getApplicationContext(),R.color.red));
+                    case 2:
+                        ((ImageView) convertView.findViewById(R.id.iv_person)).setColorFilter(ContextCompat.getColor(getApplicationContext(), R.color.red));
                         break;
-                    case 3:((ImageView)convertView.findViewById(R.id.iv_person)).setColorFilter(ContextCompat.getColor(getApplicationContext(),R.color.black));
+                    case 3:
+                        ((ImageView) convertView.findViewById(R.id.iv_person)).setColorFilter(ContextCompat.getColor(getApplicationContext(), R.color.black));
                         break;
-                    case 4:((ImageView)convertView.findViewById(R.id.iv_person)).setColorFilter(ContextCompat.getColor(getApplicationContext(),R.color.orange));
+                    case 4:
+                        ((ImageView) convertView.findViewById(R.id.iv_person)).setColorFilter(ContextCompat.getColor(getApplicationContext(), R.color.orange));
                         break;
-                    case 5:((ImageView)convertView.findViewById(R.id.iv_person)).setColorFilter(ContextCompat.getColor(getApplicationContext(),R.color.pink));
+                    case 5:
+                        ((ImageView) convertView.findViewById(R.id.iv_person)).setColorFilter(ContextCompat.getColor(getApplicationContext(), R.color.pink));
                         break;
                 }
                 return convertView;
@@ -97,7 +101,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
 //                Toast.makeText(MainActivity.this, "position selected ="+ i, Toast.LENGTH_SHORT).show();
-                Intent intent = new Intent(getApplicationContext(),ProfileActivity.class);
+                Intent intent = new Intent(getApplicationContext(), ProfileActivity.class);
                 Contact c = (Contact) adapterView.getItemAtPosition(i);
                 intent.putExtra("contact", c);
                 startActivity(intent);
@@ -105,20 +109,15 @@ public class MainActivity extends AppCompatActivity {
         });
 
 
-
     }
 
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if(requestCode == REQUEST_CODE) {
-            if (resultCode == RESULT_OK) {
-                loadContact.clear();
-                loadContact = db.getAllContact();
-                adapter.notifyDataSetChanged();
-            }
-        }
-
+    protected void onRestart() {
+        Toast.makeText(this, "Restart", Toast.LENGTH_SHORT).show();
+        loadContact.clear();
+        loadContact.addAll(db.getAllContact());
+        adapter.notifyDataSetChanged();
+        super.onRestart();
     }
 
     @Override
@@ -144,13 +143,11 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-
-
     @Override
     public void onBackPressed() {
         if (!doubleBackToExitPressedOnce) {
             this.doubleBackToExitPressedOnce = true;
-            Toast.makeText(this,"Please click BACK again to exit.", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Please click BACK again to exit.", Toast.LENGTH_SHORT).show();
             new Handler().postDelayed(new Runnable() {
 
                 @Override
@@ -158,9 +155,10 @@ public class MainActivity extends AppCompatActivity {
                     doubleBackToExitPressedOnce = false;
                 }
             }, 2000);
-        }else {
+        } else {
             //finish();
             System.exit(0);
         }
     }
+
 }

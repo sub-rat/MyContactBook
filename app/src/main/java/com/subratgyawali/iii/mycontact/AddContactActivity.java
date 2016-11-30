@@ -4,7 +4,6 @@ package com.subratgyawali.iii.mycontact;
  */
 
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -12,11 +11,12 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.EditText;
+import android.widget.Toast;
 
-public class AddContactActivity extends AppCompatActivity {
+public class AddContactActivity extends AppCompatActivity implements DatabaseUpdatedListener {
     private int MENU_UPDATE = Menu.FIRST;
     private Boolean UPDATE = false;
-    EditText editText_name,editText_phone,editText_email;
+    EditText editText_name, editText_phone, editText_email;
     Contact contact;
     DatabaseHandler handler;
 
@@ -29,10 +29,11 @@ public class AddContactActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         handler = new DatabaseHandler(AddContactActivity.this);
+        handler.databaseUpdatedListener = this;
         editText_name = (EditText) findViewById(R.id.edit_name);
         editText_phone = (EditText) findViewById(R.id.edit_phone);
         editText_email = (EditText) findViewById(R.id.edit_email);
-        if(getIntent().getSerializableExtra("contact") != null) {
+        if (getIntent().getSerializableExtra("contact") != null) {
             contact = (Contact) getIntent().getSerializableExtra("contact");
             editText_name.setText(contact.getName());
             editText_phone.setText(contact.getPhone());
@@ -63,27 +64,34 @@ public class AddContactActivity extends AppCompatActivity {
         //noinspection SimplifiableIfStatement
         if (id == MENU_UPDATE) {
 
-            if(UPDATE){
-                Contact c = new Contact(contact.get_id(),name,phone,email);
-                Log.d("data",name + " " + phone + " " + email);
+            if (UPDATE) {
+                Contact c = new Contact(contact.get_id(), name, phone, email);
+                Log.d("data", name + " " + phone + " " + email);
                 handler.updateContact(c);
                 UPDATE = false;
-            }else {
-                Contact c = new Contact(name,phone,email);
-                Log.d("data",name + " " + phone + " " + email);
+            } else {
+                Contact c = new Contact(name, phone, email);
+                Log.d("data", name + " " + phone + " " + email);
                 handler.addContact(c);
             }
-            Intent intent = new Intent(getApplicationContext(),MainActivity.class);
-            intent.putExtra("restart",true);
-            setResult(RESULT_OK, intent);
-            finish();
+//            Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+//            intent.putExtra("restart", true);
+//            setResult(RESULT_OK, intent);
+//            finish();
         }
 
         return super.onOptionsItemSelected(item);
     }
 
+
     @Override
-    public void onBackPressed() {
-        super.onBackPressed();
+    public void setDatabaseSuccess(String name, String phone, String email) {
+        Toast.makeText(this, "Success", Toast.LENGTH_SHORT).show();
+        onBackPressed();
+    }
+
+    @Override
+    public void setDatabaseError(String failureMessage) {
+        Toast.makeText(this, "Failure", Toast.LENGTH_SHORT).show();
     }
 }
