@@ -67,8 +67,8 @@ public class AddContactActivity extends AppCompatActivity implements DatabaseUpd
             if (UPDATE) {
                 Contact c = new Contact(contact.get_id(), name, phone, email);
                 Log.d("data", name + " " + phone + " " + email);
-                handler.updateContact(c);
                 UPDATE = false;
+                handler.updateContact(c);
             } else {
                 Contact c = new Contact(name, phone, email);
                 Log.d("data", name + " " + phone + " " + email);
@@ -87,7 +87,7 @@ public class AddContactActivity extends AppCompatActivity implements DatabaseUpd
     @Override
     public void setDatabaseSuccess(String name, String phone, String email) {
         Toast.makeText(this, "Success", Toast.LENGTH_SHORT).show();
-        onBackPressed();
+        super.onBackPressed();
     }
 
     @Override

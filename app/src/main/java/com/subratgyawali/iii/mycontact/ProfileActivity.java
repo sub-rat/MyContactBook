@@ -19,7 +19,7 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class ProfileActivity extends AppCompatActivity {
+public class ProfileActivity extends AppCompatActivity implements DatabaseUpdatedListener{
 
     Contact contact;
     private static final int MY_PERMISSIONS_REQUEST_CALL = 100;
@@ -33,6 +33,7 @@ public class ProfileActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         db = new DatabaseHandler(getApplicationContext());
+        db.databaseUpdatedListener = this;
         if(getIntent().getSerializableExtra("contact") != null) {
             contact = (Contact) getIntent().getSerializableExtra("contact");
             ((TextView) findViewById(R.id.tv_profile_name)).setText(contact.getName());
@@ -118,10 +119,6 @@ public class ProfileActivity extends AppCompatActivity {
             finish();
         }else if (id == R.id.action_delete){
             db.deleteContact(contact);
-            Intent intent = new Intent(ProfileActivity.this,MainActivity.class);
-            intent.putExtra("restart",true);
-            startActivity(intent);
-            finish();
         }
 
         return super.onOptionsItemSelected(item);
@@ -130,5 +127,15 @@ public class ProfileActivity extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         super.onBackPressed();
+    }
+
+    @Override
+    public void setDatabaseSuccess(String name, String phone, String email) {
+        super.onBackPressed();
+    }
+
+    @Override
+    public void setDatabaseError(String failureMessage) {
+
     }
 }

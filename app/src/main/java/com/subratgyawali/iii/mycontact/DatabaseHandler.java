@@ -6,6 +6,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -143,16 +144,28 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         values.put(KEY_EMAIL, contact.getEmail());
 
         // updating row
-        return db.update(TABLE_NAME_CONTACT, values, KEY_ID + " = ?",
-                new String[]{String.valueOf(contact.get_id())});
-
+//        return db.update(TABLE_NAME_CONTACT, values, KEY_ID + " = ?",
+//                new String[]{String.valueOf(contact.get_id())});
+int update = db.update(TABLE_NAME_CONTACT, values, KEY_ID + " = ?",
+        new String[]{String.valueOf(contact.get_id())});
+        if(update != -1){
+    databaseUpdatedListener.setDatabaseSuccess(contact.getName(),contact.getPhone(),contact.getEmail());
+                }else {
+                    databaseUpdatedListener.setDatabaseError("failed");
+                }
+        return update;
     }
 
     //    deleting single contact
     public void deleteContact(Contact contact) {
         SQLiteDatabase db = this.getWritableDatabase();
-        db.delete(TABLE_NAME_CONTACT, KEY_ID + " = ?",
-                new String[]{String.valueOf(contact.get_id())});
+       int del = db.delete(TABLE_NAME_CONTACT, KEY_ID + " = ?",new String[]{String.valueOf(contact.get_id())});
+        Log.d("deleted_data",del+"");
+        if (del != -1){
+        databaseUpdatedListener.setDatabaseSuccess("Test", "Test", "Test");
+    } else {
+        databaseUpdatedListener.setDatabaseError("Test");
+    }
         db.close();
     }
 }

@@ -89,13 +89,7 @@ public class MainActivity extends AppCompatActivity {
                 return convertView;
             }
         };
-        adapter.sort(new Comparator<Contact>() {
-            @Override
-            public int compare(Contact contact, Contact t1) {
-                return (contact.getName()).compareTo(t1.getName());
-            }
-
-        });
+        sort();
         listView.setAdapter(adapter);
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -116,8 +110,19 @@ public class MainActivity extends AppCompatActivity {
         Toast.makeText(this, "Restart", Toast.LENGTH_SHORT).show();
         loadContact.clear();
         loadContact.addAll(db.getAllContact());
+        sort();
         adapter.notifyDataSetChanged();
         super.onRestart();
+    }
+
+    private void sort() {
+        adapter.sort(new Comparator<Contact>() {
+            @Override
+            public int compare(Contact contact, Contact t1) {
+                return (contact.getName()).compareTo(t1.getName());
+            }
+
+        });
     }
 
     @Override
