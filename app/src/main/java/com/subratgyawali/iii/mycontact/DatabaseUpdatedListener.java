@@ -1,7 +1,7 @@
 package com.subratgyawali.iii.mycontact;
 
 /**
- * Created by Xerric on 11/30/2016.
+ * Created by Subrat Gyawali on 11/30/2016.
  */
 
 public interface DatabaseUpdatedListener {

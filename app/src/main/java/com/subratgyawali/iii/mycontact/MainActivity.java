@@ -119,7 +119,7 @@ public class MainActivity extends AppCompatActivity {
         adapter.sort(new Comparator<Contact>() {
             @Override
             public int compare(Contact contact, Contact t1) {
-                return (contact.getName()).compareTo(t1.getName());
+                return (contact.getName()).compareToIgnoreCase(t1.getName());
             }
 
         });
